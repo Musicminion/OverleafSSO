@@ -60,3 +60,5 @@ exit
 sudo bin/stop
 sudo bin/start
 ```
+
+Finally, If you want to edit your SSO button name, please edit: [here](https://github.com/Musicminion/OverleafSSO/blob/main/src/login.pug#L39)
