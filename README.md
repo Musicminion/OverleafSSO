@@ -22,14 +22,18 @@ SHARELATEX_OAUTH_USER_PROFILE_URL=https://api.github.com/user
 # 其中username = USER_JSON['SHARELATEX_OAUTH_USER_EMAIL_NAME_IDENTIFIER']
 SHARELATEX_OAUTH_USER_PROFILE_CONTAIN_EMAIL=false
 
-# 如果获取到的USER_JSON中，包括邮件地址，请把此项设置为邮件对应的字段
-# 如果获取到的USER_JSON中，不包括邮箱地址，请把此项设置为标识用户唯一性的字段
+# 如果获取到的USER_JSON中，包括邮件地址，请把此项设置为邮件对应的字段，例如'mail'
+# 如果获取到的USER_JSON中，不包括邮箱地址，请把此项设置为标识用户唯一性的字段,例如username
 SHARELATEX_OAUTH_USER_EMAIL_NAME_IDENTIFIER=name
 
 # 当且仅当如果获取到的USER_JSON中，不包括邮件地址，此时如果新用户通过单点登录
 # 这时候需要处理好注册的逻辑，此时注册的用户的邮箱的域名为：SHARELATEX_OAUTH_USER_EMAIL_DOMAIN
 # 默认值是oauth2.localhost
 SHARELATEX_OAUTH_USER_EMAIL_DOMAIN=oauth2.localhost
+
+# 也就是说，如果获取到的USER_JSON中，不包括邮箱地址，当一个名叫Musicminion新用户登录进来的时候
+# Overleaf会默认创建一个名叫 Musicminion@oauth2.localhost。密码会随机生成一个32位的无规律字符串
+#（当然前提是你没有修改SHARELATEX_OAUTH_USER_EMAIL_DOMAIN）
 
 ```
 
@@ -43,9 +47,16 @@ sudo bin/start
 
 Then, 
 ```
+# enter docker 
 sudo docker exec -it sharelatex /bin/bash
 git clone https://github.com/Musicminion/OverleafSSO
 cd OverleafSSO
 chmod -R 777 ./*
 ./bash
+# you will see 'Finish SSO Update!' in the end.
+exit
+
+# restart your overleaf
+sudo bin/stop
+sudo bin/start
 ```
