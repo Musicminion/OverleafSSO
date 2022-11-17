@@ -34,10 +34,10 @@ block content
 									span(data-ol-inflight="idle") #{translate("login")}
 									span(hidden data-ol-inflight="pending") #{translate("logging_in")}…
 								a.pull-right(href='/user/password/reset') #{translate("forgot_your_password")}?
-							if (#{process.env.SHARELATEX_OAUTH_ENABLED} == 'true')
+							if process.env.SHARELATEX_OAUTH_ENABLED == 'true'
 								p.login-register-hr-text-container(style='text-align: center')
 									span.login-register-hr-text Other Login Method
-								if (#{process.env.SHARELATEX_OAUTH_COMMON_ENABLED} == 'true')
-									.form-group.text-center(style="padding-top: 10px")
-										a.btn-block.login-btn(href="/auth/oauth/common/redirect" style='padding-left: 0px')
-											| #{process.env.SHARELATEX_OAUTH_COMMON_BUTTON_NAME}
+								if process.env.SHARELATEX_OAUTH_COMMON_ENABLED == 'true'
+								.form-group.text-center(style="padding-top: 0px")
+									a.btn-block.login-btn(href="/auth/oauth/common/redirect" style='padding-left: 0px')
+										| #{process.env.SHARELATEX_OAUTH_COMMON_BUTTON_NAME}
