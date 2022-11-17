@@ -298,6 +298,7 @@ const AuthenticationController = {
 			querystring.stringify({
 				client_id: process.env.SHARELATEX_OAUTH_CLIENT_ID,
 				response_type: "code",
+				scope: process.env.SHARELATEX_OAUTH_SCOPE,
 				redirect_uri: (process.env.SHARELATEX_OAUTH_REDIRECT_URL),
 			}));
 	},
