@@ -15,6 +15,11 @@ SHARELATEX_OAUTH_CLIENT_SECRET=c78*************************
 SHARELATEX_OAUTH_REDIRECT_URL=http://127.0.0.1:3000/oauth/callback
 SHARELATEX_OAUTH_ACCESS_TOKEN_URL=https://github.com/login/oauth/access_token
 SHARELATEX_OAUTH_USER_PROFILE_URL=https://api.github.com/user
+SHARELATEX_OAUTH_SCOPE=mail
+
+# Login Button Text 
+SHARELATEX_OAUTH_BUTTON_NAME=Login Via Github
+
 
 # 通过单点登录获取到的用户信息是否包含电子邮件字段
 # 默认为否，那么在新用户通过单点登录的时候，就会创建
