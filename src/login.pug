@@ -34,6 +34,8 @@ block content
 									span(data-ol-inflight="idle") #{translate("login")}
 									span(hidden data-ol-inflight="pending") #{translate("logging_in")}…
 								a.pull-right(href='/user/password/reset') #{translate("forgot_your_password")}?
+							p.login-register-hr-text-container(style='text-align: center')
+								span.login-register-hr-text Other Login Method
 							.form-group.text-center(style="padding-top: 10px")
 								a.btn-block.login-btn(href="/oauth/redirect" style='padding-left: 0px')
-									| Login Via Github SSO
+									| #{process.env.SHARELATEX_OAUTH_BUTTON_NAME}
