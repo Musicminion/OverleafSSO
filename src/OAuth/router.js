@@ -1304,10 +1304,10 @@ function initialize(webRouter, privateApiRouter, publicApiRouter) {
 
     webRouter.get('/unsupported-browser', renderUnsupportedBrowserPage)
 
-    webRouter.get('/oauth/redirect', AuthenticationController.oauth2Redirect)
-    webRouter.get('/oauth/callback', AuthenticationController.oauth2Callback)
-    AuthenticationController.addEndpointToLoginWhitelist('/oauth/redirect')
-    AuthenticationController.addEndpointToLoginWhitelist('/oauth/callback')
+    webRouter.get('/auth/oauth/common/redirect', AuthenticationController.oauth2Redirect)
+    webRouter.get('/auth/oauth/common/callback', AuthenticationController.oauth2Callback)
+    AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/common/redirect')
+    AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/common/callback')
 
     webRouter.get('*', ErrorController.notFound)
 }

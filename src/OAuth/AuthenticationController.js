@@ -294,26 +294,33 @@ const AuthenticationController = {
 	},
 
 	oauth2Redirect(req, res, next) {
-		res.redirect(`${process.env.SHARELATEX_OAUTH_AUTH_URL}?` +
+		const oauth_allowed = process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false';
+		if(oauth_allowed == 'true'){
+			res.redirect(`${process.env.SHARELATEX_OAUTH_COMMON_AUTH_URL}?` +
 			querystring.stringify({
-				client_id: process.env.SHARELATEX_OAUTH_CLIENT_ID,
+				client_id: process.env.SHARELATEX_OAUTH_COMMON_CLIENT_ID,
 				response_type: "code",
-				scope: process.env.SHARELATEX_OAUTH_SCOPE,
-				redirect_uri: (process.env.SHARELATEX_OAUTH_REDIRECT_URL),
+				scope: process.env.SHARELATEX_OAUTH_COMMON_SCOPE,
+				redirect_uri: (process.env.SHARELATEX_OAUTH_COMMON_REDIRECT_URL),
 			}));
+		}
 	},
 
 	oauth2Callback(req, res, next) {
+		const oauth_allowed = process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false';
+		if(oauth_allowed == 'false'){
+			return;
+		}
 
 		const params = new URLSearchParams()
 		params.append('grant_type', "authorization_code")
-		params.append('client_id', process.env.SHARELATEX_OAUTH_CLIENT_ID)
-		params.append('client_secret', process.env.SHARELATEX_OAUTH_CLIENT_SECRET)
+		params.append('client_id', process.env.SHARELATEX_OAUTH_COMMON_CLIENT_ID)
+		params.append('client_secret', process.env.SHARELATEX_OAUTH_COMMON_CLIENT_SECRET)
 		params.append("code", req.query.code)
-		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_REDIRECT_URL))
+		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_COMMON_REDIRECT_URL))
 
 
-		axios.post(process.env.SHARELATEX_OAUTH_ACCESS_TOKEN_URL, params, {
+		axios.post(process.env.SHARELATEX_OAUTH_COMMON_ACCESS_TOKEN_URL, params, {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 				"Accept": "application/json"
@@ -329,7 +336,7 @@ const AuthenticationController = {
 				params: access_res.data
 			}
 
-			axios.get(process.env.SHARELATEX_OAUTH_USER_PROFILE_URL, axios_get_config).then(info_res => {
+			axios.get(process.env.SHARELATEX_OAUTH_COMMON_USER_PROFILE_URL, axios_get_config).then(info_res => {
 				if (info_res.data.err) {
 					res.json({ message: info_res.data.err });
 				} else {

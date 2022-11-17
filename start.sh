@@ -16,18 +16,20 @@ npm install axios
 cd $CURRENT_DIR
 # 拷贝router
 rm /overleaf/services/web/app/src/router.js
-cp ./src/router.js /overleaf/services/web/app/src/
+cp ./src/OAuth/router.js /overleaf/services/web/app/src/
 
 # 拷贝Auth Control
 rm /overleaf/services/web/app/src/Features/Authentication/AuthenticationController.js
-cp ./src/AuthenticationController.js /overleaf/services/web/app/src/Features/Authentication/
+cp ./src/OAuth/AuthenticationController.js /overleaf/services/web/app/src/Features/Authentication/
 
 # 拷贝Auth Manager
 rm /overleaf/services/web/app/src/Features/Authentication/AuthenticationManager.js
-cp ./src/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
+cp ./src/OAuth/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
 
 # 拷贝
 rm /overleaf/services/web/app/views/user/login.pug
-cp ./src/login.pug /overleaf/services/web/app/views/user/
+cp ./src/OAuth/login.pug /overleaf/services/web/app/views/user/
+
+
 
 echo 'Finish SSO Update!'

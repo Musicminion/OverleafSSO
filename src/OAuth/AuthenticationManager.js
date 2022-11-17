@@ -49,15 +49,15 @@ const AuthenticationManager = {
 
 	createUserIfNotExist(oauth_user, callback) {
 		// if `oauth_user` has email info
-		const oauth_email_exist = process.env.SHARELATEX_OAUTH_USER_PROFILE_CONTAIN_EMAIL || 'false';
+		const oauth_email_exist = process.env.SHARELATEX_OAUTH_COMMON_USER_PROFILE_CONTAIN_EMAIL || 'false';
 		let oauth_new_user_email  = "";
 
 		if(oauth_email_exist == 'false'){
-			oauth_new_user_email = oauth_user[process.env.SHARELATEX_OAUTH_USER_EMAIL_NAME_IDENTIFIER] 
-			+ "@" + process.env.SHARELATEX_OAUTH_USER_EMAIL_DOMAIN
+			oauth_new_user_email = oauth_user[process.env.SHARELATEX_OAUTH_COMMON_USER_EMAIL_NAME_IDENTIFIER] 
+			+ "@" + process.env.SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN
 		}
 		else{
-			oauth_new_user_email = oauth_user[process.env.SHARELATEX_OAUTH_USER_EMAIL_NAME_IDENTIFIER];
+			oauth_new_user_email = oauth_user[process.env.SHARELATEX_OAUTH_COMMON_USER_EMAIL_NAME_IDENTIFIER];
 		}
 
 		const query = {
