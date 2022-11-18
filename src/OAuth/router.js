@@ -1312,8 +1312,8 @@ function initialize(webRouter, privateApiRouter, publicApiRouter) {
 
     // Apple OAuth
     webRouter.get('/auth/oauth/apple/redirect', AuthenticationController.oauthAppleRedirect)
+    webRouter.post('/auth/oauth/apple/callback', AuthenticationController.oauthAppleCallback)
     AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/apple/redirect')
-    webRouter.get('/auth/oauth/apple/callback', AuthenticationController.oauthAppleCallback)
     AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/apple/callback')
 
     webRouter.get('*', ErrorController.notFound)

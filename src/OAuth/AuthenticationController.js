@@ -378,7 +378,7 @@ const AuthenticationController = {
 	},
 
 	oauthAppleCallback(req, res, next){
-		console.log("[oauthApple Callback req is]:" + req);
+		console.log("[oauthApple Callback req is]:" + JSON.stringify(req));
 		const oauth_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
 		if(oauth_allowed == 'false'){
 			return;
@@ -391,14 +391,14 @@ const AuthenticationController = {
 		params.append("code", req.query.code)
 		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL))
 
-		console.log("[oauthApple Callback params will POST is]:" + params);
+		console.log("[oauthApple Callback params will POST is]:" + JSON.stringify(params));
 
 		axios.post(process.env.SHARELATEX_OAUTH_APPLE_TOKEN_URL, params, {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 			}
 		}).then(response => {
-			console.log("[oauthApple Callback POST responese]:" + response);
+			console.log("[oauthApple Callback POST responese]:" + JSON.stringify(response));
 			this.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
 					console.log(jwtClaims);
