@@ -366,7 +366,7 @@ const AuthenticationController = {
 		let jwtClaims = {};
 		try {
 			const decodedToken = jwt.decode(idToken, { complete: true });
-			const applePublicKey = await oauthAppleGetPublicKey(decodedToken.header.kid);
+			const applePublicKey = await this.oauthAppleGetPublicKey(decodedToken.header.kid);
 			jwtClaims = jwt.verify(idToken, applePublicKey, { algorithms: 'RS256' });
 		}catch (err) {
 			console.log('get apple public key', err);
@@ -387,7 +387,7 @@ const AuthenticationController = {
 		const params = new URLSearchParams()
 		params.append('grant_type', "authorization_code")
 		params.append('client_id', process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID)
-		params.append('client_secret', oauthAppleGetClientSecret())
+		params.append('client_secret', this.oauthAppleGetClientSecret())
 		params.append("code", req.query.code)
 		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL))
 
@@ -399,7 +399,7 @@ const AuthenticationController = {
 			}
 		}).then(response => {
 			console.log("[oauthApple Callback POST responese]:" + response);
-			oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
+			this.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
 					console.log(jwtClaims);
 					return res.json({
