@@ -404,11 +404,11 @@ const AuthenticationController = {
 				(jwtClaims) => {
 					console.log(jwtClaims);
 					let appleAuthUser = {};
-					if(req.body.user.name != null){
+					if(req.body.user!= null && req.body.user.name!= null){
 						appleAuthUser = {
 							sub: jwtClaims.sub,
 							email: jwtClaims.email,
-							firstName: req.body.user.name.firstName ,
+							firstName: req.body.user.name.firstName,
 							lastName: req.body.user.name.lastName
 						};
 					}
@@ -434,7 +434,7 @@ const AuthenticationController = {
 			});
 		}).catch(error => {
 			return res.status(500).json({
-				message: '错误',
+				message: 'error',
 				error: error
 			})
 		})
