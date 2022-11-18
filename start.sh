@@ -11,7 +11,7 @@ CURRENT_DIR=$(cd $(dirname $0); pwd)
 cd /overleaf/services/web/
 npm install axios
 npm install jsonwebtoken
-
+npm install node-rsa
 # npm install axios  --registry=https://registry.npm.taobao.org
 # npm install jsonwebtoken --registry=https://registry.npm.taobao.org
 

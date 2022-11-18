@@ -1,5 +1,7 @@
 const AuthenticationManager = require('./AuthenticationManager')
 const axios = require('axios')
+const jwt = require('jsonwebtoken')
+const NodeRSA = require('node-rsa');
 const SessionManager = require('./SessionManager')
 const OError = require('@overleaf/o-error')
 const LoginRateLimiter = require('../Security/LoginRateLimiter')
@@ -304,6 +306,7 @@ const AuthenticationController = {
 	// 		 	|_|   |_|                                        
 														  
 	// OAuth For Apple Only!
+
 	oauthAppleRedirect(req, res, next){
 		const oauth_apple_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
 		if(oauth_apple_allowed == 'true'){
@@ -316,13 +319,114 @@ const AuthenticationController = {
 				scope: process.env.SHARELATEX_OAUTH_APPLE_SCOPE,
 				redirect_uri: (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL),
 			}));
-
 		}
 	},
 
+
+	oauthAppleGetClientSecret(){
+		const privateKey = process.env.SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY;
+		const headers = {
+			alg: 'ES256',
+			kid: process.env.SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_ID,
+		}
+		const timeNow = Math.floor(Date.now() / 1000);
+		const claims = {
+			iss: process.env.SHARELATEX_OAUTH_APPLE_DEVELOPER_TEAM_ID,
+			aud: 'https://appleid.apple.com',
+			sub: process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID,
+			iat: timeNow,
+			exp: timeNow + 1800,
+		};
+		token = jwt.sign(claims, privateKey, {algorithm: 'ES256',header: headers});
+		return token;
+	},
+
+
+
+
+	async oauthAppleGetPublicKey(kid){
+		let res = await axios.request({
+			method: "GET",
+			url: process.env.SHARELATEX_OAUTH_APPLE_PUBLIC_KEY_URL,
+		});
+		const keys = res.data.keys;
+		const key = keys.find(k => k.kid === kid);
+		const pubKey = new NodeRSA();
+
+		pubKey.importKey({ n: Buffer.from(key.n, 'base64'), e: Buffer.from(key.e, 'base64') }, 'components-public');
+		return pubKey.exportKey(['public']);
+	},
+
+	async oauthAppleVerifyIDToken(idToken, clientID){
+		if (!idToken) {
+			let error = new Error("OBJECT_NOT_FOUND", 'id token is invalid for this user.')
+			console.error('ERROR_ACCOUNT_CREATION_FAILED');
+			throw error;
+		}
+		let jwtClaims = {};
+		try {
+			const decodedToken = jwt.decode(idToken, { complete: true });
+			const applePublicKey = await oauthAppleGetPublicKey(decodedToken.header.kid);
+			jwtClaims = jwt.verify(idToken, applePublicKey, { algorithms: 'RS256' });
+		}catch (err) {
+			console.log('get apple public key', err);
+			throw new Error("publickey", 'apple public key is invalid for this user.');;
+		}
+
+		console.log('[jwtClaims is ]:', jwtClaims);
+		return jwtClaims;
+	},
+
 	oauthAppleCallback(req, res, next){
+		console.log("[oauthApple Callback req is]:" + req);
+		const oauth_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
+		if(oauth_allowed == 'false'){
+			return;
+		}
+
+		const params = new URLSearchParams()
+		params.append('grant_type', "authorization_code")
+		params.append('client_id', process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID)
+		params.append('client_secret', oauthAppleGetClientSecret())
+		params.append("code", req.query.code)
+		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL))
+
+		console.log("[oauthApple Callback params will POST is]:" + params);
+
+		axios.post(process.env.SHARELATEX_OAUTH_APPLE_TOKEN_URL, params, {
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			}
+		}).then(response => {
+			console.log("[oauthApple Callback POST responese]:" + response);
+			oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
+				(jwtClaims) => {
+					console.log(jwtClaims);
+					return res.json({
+						message: 'success',
+						data: response.data,
+						verifyData: jwtClaims
+					})
+			});
+			
+		}).catch(error => {
+			return res.status(500).json({
+				message: '错误',
+				error: error.response.data
+			})
+		})
+
 
 	},
+
+
+
+
+	// ####################################################################################
+
+
+
+
 
 	// ####################################################################################
 	// Common OAuth For Github、Google And So On.
