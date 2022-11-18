@@ -1312,7 +1312,15 @@ function initialize(webRouter, privateApiRouter, publicApiRouter) {
 
     // Apple OAuth
     webRouter.get('/auth/oauth/apple/redirect', AuthenticationController.oauthAppleRedirect)
-    webRouter.post('/auth/oauth/apple/callback', AuthenticationController.oauthAppleCallback)
+    webRouter.post(
+        '/auth/oauth/apple/callback',
+        RateLimiterMiddleware.rateLimit({
+            endpointName: 'read-and-write-token',
+            maxRequests: 15,
+            timeInterval: 60,
+        }),
+        AuthenticationController.oauthAppleCallback
+    );
     AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/apple/redirect')
     AuthenticationController.addEndpointToLoginWhitelist('/auth/oauth/apple/callback')
 

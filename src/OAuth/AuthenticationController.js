@@ -1,5 +1,6 @@
 const AuthenticationManager = require('./AuthenticationManager')
 const axios = require('axios')
+const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const NodeRSA = require('node-rsa');
 const SessionManager = require('./SessionManager')
@@ -324,7 +325,10 @@ const AuthenticationController = {
 
 
 	oauthAppleGetClientSecret(){
+		console.log('oauthAppleGetClientSecret start!!!!!!!!!!!!!!!!!!!');
 		const privateKey = process.env.SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY;
+		// const privateKey = fs.readFileSync('/overleaf/services/web/app/src/Features/Authentication/AuthKey_R37J7XV25W.p8', { encoding: "utf-8" });
+		console.log(privateKey);
 		const headers = {
 			alg: 'ES256',
 			kid: process.env.SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_ID,
@@ -338,11 +342,10 @@ const AuthenticationController = {
 			exp: timeNow + 1800,
 		};
 		token = jwt.sign(claims, privateKey, {algorithm: 'ES256',header: headers});
+		console.log('oauthAppleGetClientSecret end!!!!!!!!!!!!!!!!!!!');
+		console.log(token);
 		return token;
 	},
-
-
-
 
 	async oauthAppleGetPublicKey(kid){
 		let res = await axios.request({
@@ -357,7 +360,7 @@ const AuthenticationController = {
 		return pubKey.exportKey(['public']);
 	},
 
-	async oauthAppleVerifyIDToken(idToken, clientID){
+	async oauthAppleVerifyIDToken (idToken, clientID){
 		if (!idToken) {
 			let error = new Error("OBJECT_NOT_FOUND", 'id token is invalid for this user.')
 			console.error('ERROR_ACCOUNT_CREATION_FAILED');
@@ -366,7 +369,7 @@ const AuthenticationController = {
 		let jwtClaims = {};
 		try {
 			const decodedToken = jwt.decode(idToken, { complete: true });
-			const applePublicKey = await this.oauthAppleGetPublicKey(decodedToken.header.kid);
+			const applePublicKey = await AuthenticationController.oauthAppleGetPublicKey(decodedToken.header.kid);
 			jwtClaims = jwt.verify(idToken, applePublicKey, { algorithms: 'RS256' });
 		}catch (err) {
 			console.log('get apple public key', err);
@@ -378,7 +381,7 @@ const AuthenticationController = {
 	},
 
 	oauthAppleCallback(req, res, next){
-		console.log("[oauthApple Callback req is]:" + JSON.stringify(req));
+		// console.log("[oauthApple Callback req is]:" + req);
 		const oauth_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
 		if(oauth_allowed == 'false'){
 			return;
@@ -387,19 +390,19 @@ const AuthenticationController = {
 		const params = new URLSearchParams()
 		params.append('grant_type', "authorization_code")
 		params.append('client_id', process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID)
-		params.append('client_secret', this.oauthAppleGetClientSecret())
-		params.append("code", req.query.code)
+		params.append('client_secret', AuthenticationController.oauthAppleGetClientSecret())
+		params.append("code", req.body.code)
 		params.append('redirect_uri', (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL))
 
-		console.log("[oauthApple Callback params will POST is]:" + JSON.stringify(params));
+		console.log("[oauthApple Callback params will POST is]:" + params.toString());
 
 		axios.post(process.env.SHARELATEX_OAUTH_APPLE_TOKEN_URL, params, {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 			}
 		}).then(response => {
-			console.log("[oauthApple Callback POST responese]:" + JSON.stringify(response));
-			this.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
+			console.log("[oauthApple Callback POST responese]:" +response);
+			AuthenticationController.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
 					console.log(jwtClaims);
 					return res.json({
