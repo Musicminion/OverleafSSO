@@ -424,7 +424,7 @@ const AuthenticationController = {
 		}).catch(error => {
 			return res.status(500).json({
 				message: '错误',
-				error: error.response.data
+				error: error
 			})
 		})
 
