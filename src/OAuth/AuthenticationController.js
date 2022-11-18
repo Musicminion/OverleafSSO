@@ -403,13 +403,26 @@ const AuthenticationController = {
 			console.log("[POST TOKEN_URL oauthApple Callback POST responese]:" + JSON.stringify(response));
 			AuthenticationController.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
-					let appleAuthUser = {
-						sub: jwtClaims.sub,
-						email: jwtClaims.email,
-						firstName: req.body.user.name.firstName || "",
-						lastName: req.body.user.name.lastName || "",
-					};
+					console.log(jwtClaims);
+					let appleAuthUser = {};
+					if(req.body.user.name != null){
+						appleAuthUser = {
+							sub: jwtClaims.sub,
+							email: jwtClaims.email,
+							firstName: req.body.user.name.firstName ,
+							lastName: req.body.user.name.lastName
+						};
+					}
+					else{
+						appleAuthUser = {
+							sub: jwtClaims.sub,
+							email: jwtClaims.email,
+							firstName: "unknown" ,
+							lastName: "unknown"
+						};
+					}
 
+					console.log("执行到这里了！");
 					console.log(appleAuthUser);
 
 					AuthenticationManager.createOAuthAppleUserIfNotExist(appleAuthUser, (error, user) => {
@@ -419,7 +432,6 @@ const AuthenticationController = {
 							AuthenticationController.finishLogin(user, req, res, next);
 						}
 					});
-					console.log(jwtClaims);
 			});
 		}).catch(error => {
 			return res.status(500).json({
