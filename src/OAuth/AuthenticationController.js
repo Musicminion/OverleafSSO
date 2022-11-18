@@ -326,8 +326,7 @@ const AuthenticationController = {
 
 	oauthAppleGetClientSecret(){
 		console.log('oauthAppleGetClientSecret start!!!!!!!!!!!!!!!!!!!');
-		const privateKey = process.env.SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY;
-		// const privateKey = fs.readFileSync('/overleaf/services/web/app/src/Features/Authentication/AuthKey_R37J7XV25W.p8', { encoding: "utf-8" });
+		const privateKey = fs.readFileSync('/overleaf/services/web/app/src/Features/Authentication/AuthKey.p8', { encoding: "utf-8" });
 		console.log(privateKey);
 		const headers = {
 			alg: 'ES256',

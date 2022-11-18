@@ -30,10 +30,26 @@ cp ./src/OAuth/AuthenticationController.js /overleaf/services/web/app/src/Featur
 rm /overleaf/services/web/app/src/Features/Authentication/AuthenticationManager.js
 cp ./src/OAuth/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
 
-# 拷贝
+# 拷贝login.pug
 rm /overleaf/services/web/app/views/user/login.pug
 cp ./src/OAuth/login.pug /overleaf/services/web/app/views/user/
 
+# 拷贝Server.js
+rm /overleaf/services/web/app/src/infrastructure/Server.js
+cp ./src/OAuth/Server.js /overleaf/services/web/app/src/infrastructure/
 
+
+if [ "${SHARELATEX_OAUTH_APPLE_ENABLED}" == "true" ]; then
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_1 >> ./src/OAuth/AuthKey.p8
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_2 >> ./src/OAuth/AuthKey.p8
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_3 >> ./src/OAuth/AuthKey.p8
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_4 >> ./src/OAuth/AuthKey.p8
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_5 >> ./src/OAuth/AuthKey.p8
+    echo $SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY_LINE_6 >> ./src/OAuth/AuthKey.p8
+    # 拷贝密钥文件
+    cp ./src/OAuth/AuthKey.p8 /overleaf/services/web/app/src/Features/Authentication/AuthKey.p8
+
+    echo 'Apple Auth Key Imported!'
+fi
 
 echo 'Finish SSO Update!'
