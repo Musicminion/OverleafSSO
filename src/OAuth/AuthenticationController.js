@@ -293,7 +293,31 @@ const AuthenticationController = {
 		return doRequest
 	},
 
-	oauth2Redirect(req, res, next) {
+	// ####################################################################################
+	// OAuth For Apple Only!
+	oauthAppleRedirect(req, res, next){
+		const oauth_apple_allowed = SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
+		if(oauth_apple_allowed == 'true'){
+
+			res.redirect(`${process.env.SHARELATEX_OAUTH_APPLE_AUTH_URL}?` +
+			querystring.stringify({
+				client_id: process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID,
+				response_type: "code",
+				scope: process.env.SHARELATEX_OAUTH_COMMON_SCOPE,
+				redirect_uri: (process.env.SHARELATEX_OAUTH_COMMON_REDIRECT_URL),
+			}));
+
+		}
+	},
+
+	oauthAppleCallback(req, res, next){
+
+	},
+
+	// ####################################################################################
+	// Common OAuth For Github、Google And So On.
+	// URL: /auth/oauth/common/redirect
+	oauthCommonRedirect(req, res, next) {
 		const oauth_allowed = process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false';
 		if(oauth_allowed == 'true'){
 			res.redirect(`${process.env.SHARELATEX_OAUTH_COMMON_AUTH_URL}?` +
@@ -306,7 +330,8 @@ const AuthenticationController = {
 		}
 	},
 
-	oauth2Callback(req, res, next) {
+	// URL: /auth/oauth/common/callback
+	oauthCommonCallback(req, res, next) {
 		const oauth_allowed = process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false';
 		if(oauth_allowed == 'false'){
 			return;
@@ -351,6 +376,8 @@ const AuthenticationController = {
 			});
 		});
 	},
+
+	// ####################################################################################
 
 	requireOauth() {
 		// require this here because module may not be included in some versions

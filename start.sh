@@ -10,8 +10,10 @@ CURRENT_DIR=$(cd $(dirname $0); pwd)
 # 安装依赖（如果在国内安装请加上这句话 --registry=https://registry.npm.taobao.org）
 cd /overleaf/services/web/
 npm install axios
-# npm install axios  --registry=https://registry.npm.taobao.org
+npm install jsonwebtoken
 
+# npm install axios  --registry=https://registry.npm.taobao.org
+# npm install jsonwebtoken --registry=https://registry.npm.taobao.org
 
 cd $CURRENT_DIR
 # 拷贝router
