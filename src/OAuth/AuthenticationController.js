@@ -296,7 +296,7 @@ const AuthenticationController = {
 	// ####################################################################################
 	// OAuth For Apple Only!
 	oauthAppleRedirect(req, res, next){
-		const oauth_apple_allowed = SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
+		const oauth_apple_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
 		if(oauth_apple_allowed == 'true'){
 
 			res.redirect(`${process.env.SHARELATEX_OAUTH_APPLE_AUTH_URL}?` +
