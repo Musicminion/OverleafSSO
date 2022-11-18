@@ -55,7 +55,7 @@ if [ "${SHARELATEX_OAUTH_APPLE_ENABLED}" == "true" ]; then
 
     # 拷贝数据库操作文件
     rm /overleaf/services/web/app/src/Features/User/UserRegistrationHandler.js
-    cp ./src/UserRegistrationHandler.js /overleaf/services/web/app/src/Features/User/
+    cp ./src/OAuth/UserRegistrationHandler.js /overleaf/services/web/app/src/Features/User/
 fi
 
 echo 'Finish SSO Update!'
