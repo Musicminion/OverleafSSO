@@ -46,6 +46,64 @@ const AuthenticationManager = {
 		})
 	},
 
+	createOAuthAppleUserIfNotExist(apple_oauth_user, callback){
+		if(apple_oauth_user == null)
+			return callback('null apple_oauth_user!', null);
+		if(apple_oauth_user.sub == null || apple_oauth_user.sub == "")
+			return callback('null apple_oauth_user sub ID!', null);
+		
+		const query = { thirdPartyIdentifiers : { $exists: true }, 'thirdPartyIdentifiers.appleSub': apple_oauth_user.sub}
+		UserGetter.getUser(query ,{}, (error, user) => {
+
+			if ((!user || !user.hashedPassword)) {
+				// create random pass for local userdb,for safety
+				let pwdSpace = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz0123456789!@#$%^&*()";
+				let pwdSpaceLen = pwdSpace.length;
+				let result = "";
+				for (i = 0; i < 32; i++) {
+					result += pwdSpace.charAt(Math.floor(Math.random() * pwdSpaceLen));
+				}
+
+				// get passwd
+				let passwd = result;
+				const userRegHand = require('../User/UserRegistrationHandler.js')
+
+				userRegHand.registerNewUser({
+					email: apple_oauth_user.email,
+					first_name: apple_oauth_user.firstName,
+					last_name: apple_oauth_user.lastName,
+					password: passwd,
+					thirdPartyIdentifiers: [ {appleSub: apple_oauth_user.sub} ]
+				},
+					function (error, user) {
+						if (error) {
+							return callback(error, null);
+						}
+						user.admin = false
+						user.emails[0].confirmedAt = Date.now()
+						user.save()
+						
+						UserGetter.getUser(query, (error, user) => {
+							if (error) {
+								return callback(error, null);
+							}
+							if (user && user.hashedPassword) {
+								return callback(null, user);
+							} else {
+								return callback("Unknown error", null);
+							}
+						})
+					}
+				);
+
+			}
+			else{
+				return callback(null, user);
+			}
+		})
+
+	},
+
 
 	createUserIfNotExist(oauth_user, callback) {
 		// if `oauth_user` has email info
