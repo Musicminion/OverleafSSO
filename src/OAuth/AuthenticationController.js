@@ -400,7 +400,6 @@ const AuthenticationController = {
 				"Content-Type": "application/x-www-form-urlencoded",
 			}
 		}).then(response => {
-			console.log("[POST TOKEN_URL oauthApple Callback POST responese]:" + JSON.stringify(response));
 			AuthenticationController.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
 					console.log(jwtClaims);
