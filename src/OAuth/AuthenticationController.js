@@ -294,6 +294,15 @@ const AuthenticationController = {
 	},
 
 	// ####################################################################################
+	// 	 					 _         _____ _____  ____  
+	// 	   /\               | |       / ____/ ____|/ __ \ 
+	//    /  \   _ __  _ __ | | ___  | (___| (___ | |  | |
+	//   / /\ \ | '_ \| '_ \| |/ _ \  \___ \\___ \| |  | |
+	//  / ____ \| |_) | |_) | |  __/  ____) |___) | |__| |
+	// /_/    \_\ .__/| .__/|_|\___| |_____/_____/ \____/ 
+	// 		 	| |   | |                                 
+	// 		 	|_|   |_|                                        
+														  
 	// OAuth For Apple Only!
 	oauthAppleRedirect(req, res, next){
 		const oauth_apple_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
@@ -302,7 +311,8 @@ const AuthenticationController = {
 			res.redirect(`${process.env.SHARELATEX_OAUTH_APPLE_AUTH_URL}?` +
 			querystring.stringify({
 				client_id: process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID,
-				response_type: "code",
+				response_type: "code id_token",
+				response_mode: "form_post",
 				scope: process.env.SHARELATEX_OAUTH_APPLE_SCOPE,
 				redirect_uri: (process.env.SHARELATEX_OAUTH_APPLE_REDIRECT_URL),
 			}));
