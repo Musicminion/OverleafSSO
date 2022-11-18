@@ -380,7 +380,7 @@ const AuthenticationController = {
 	},
 
 	oauthAppleCallback(req, res, next){
-		// console.log("[oauthApple Callback req is]:" + req);
+		console.log("Apple Direct Post:  oauthApple Callback req is]:" + JSON.stringify(req.body));
 		const oauth_allowed = process.env.SHARELATEX_OAUTH_APPLE_ENABLED || 'false';
 		if(oauth_allowed == 'false'){
 			return;
@@ -400,17 +400,27 @@ const AuthenticationController = {
 				"Content-Type": "application/x-www-form-urlencoded",
 			}
 		}).then(response => {
-			console.log("[oauthApple Callback POST responese]:" +response);
+			console.log("[POST TOKEN_URL oauthApple Callback POST responese]:" + JSON.stringify(response));
 			AuthenticationController.oauthAppleVerifyIDToken(response.data.id_token, process.env.SHARELATEX_OAUTH_APPLE_CLIENT_ID).then(
 				(jwtClaims) => {
+					let appleAuthUser = {
+						sub: jwtClaims.sub,
+						email: jwtClaims.email,
+						firstName: req.body.user.name.firstName || "",
+						lastName: req.body.user.name.lastName || "",
+					};
+
+					console.log(appleAuthUser);
+
+					AuthenticationManager.createOAuthAppleUserIfNotExist(appleAuthUser, (error, user) => {
+						if (error) {
+							res.json({ message: error });
+						} else {
+							AuthenticationController.finishLogin(user, req, res, next);
+						}
+					});
 					console.log(jwtClaims);
-					return res.json({
-						message: 'success',
-						data: response.data,
-						verifyData: jwtClaims
-					})
 			});
-			
 		}).catch(error => {
 			return res.status(500).json({
 				message: '错误',
