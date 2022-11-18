@@ -37,7 +37,7 @@ block content
 							if ((process.env.SHARELATEX_OAUTH_ENABLED || 'false') == 'true')
 								p.login-register-hr-text-container(style='text-align: center')
 									span.login-register-hr-text Other Login Method
-								if (process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false' == 'true')
+								if ((process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false') == 'true')
 								.form-group.text-center(style="padding-top: 0px")
 									a.btn-block.login-btn(href="/auth/oauth/common/redirect" style='padding-left: 0px')
 										| #{process.env.SHARELATEX_OAUTH_COMMON_BUTTON_NAME}
