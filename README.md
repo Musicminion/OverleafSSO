@@ -1,4 +1,7 @@
 # Overleaf OAuth2 Tool
+
+Attention！Project Still In Beta！Don't use directly!
+
 This is a tool for Update your Overleaf to support Single Sign On(SSO)
 
 First of all, let's suppose you install Overleaf via [Overleaf Toolkit](https://github.com/overleaf/toolkit/). If you install Your Overleaf via other method, don't use this tool.
