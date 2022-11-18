@@ -77,6 +77,8 @@ Finally, If you want to edit your SSO button name, please edit: [here](https://g
 # Common OAuth (Support Main OAuth like Github/Google and so on)
 # If you allow OAUTH : true | false
 SHARELATEX_OAUTH_ENABLED=
+SHARELATEX_OAUTH_HR_LINE_TEXT=
+
 
 # Auth Related
 SHARELATEX_OAUTH_COMMON_ENABLED=

@@ -36,7 +36,8 @@ block content
 								a.pull-right(href='/user/password/reset') #{translate("forgot_your_password")}?
 							if ((process.env.SHARELATEX_OAUTH_ENABLED || 'false') == 'true')
 								p.login-register-hr-text-container(style='text-align: center')
-									span.login-register-hr-text Other Login Method
+									span.login-register-hr-text
+										| #{process.env.SHARELATEX_OAUTH_HR_LINE_TEXT}
 								if ((process.env.SHARELATEX_OAUTH_COMMON_ENABLED || 'false') == 'true')
 									.form-group.text-center(style="padding-top: 0px")
 										a.btn-block.login-btn(href="/auth/oauth/common/redirect" style='padding-left: 0px')
