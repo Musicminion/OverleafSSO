@@ -97,12 +97,18 @@ SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN=
 
 # Apple Related 
 SHARELATEX_OAUTH_APPLE_ENABLED=true
+
 SHARELATEX_OAUTH_APPLE_AUTH_URL=https://appleid.apple.com/auth/authorize
 SHARELATEX_OAUTH_APPLE_TOKEN_URL=https://appleid.apple.com/auth/token
+
 SHARELATEX_OAUTH_APPLE_PUBLIC_KEY_URL=https://appleid.apple.com/auth/keys
 SHARELATEX_OAUTH_APPLE_CLIENT_ID=
-SHARELATEX_OAUTH_APPLE_CLIENT_SECRET=
+# The OAuth Service's key you download From https://developer.apple.com/account/resources/authkeys
+# This key is very long(About Four Lines), remember to fill it correctly!
+# Keep it secret!
+SHARELATEX_OAUTH_APPLE_AUTH_SERVICE_SECRET_KEY=
 SHARELATEX_OAUTH_APPLE_REDIRECT_URL=
 SHARELATEX_OAUTH_APPLE_SCOPE=name email
 
+SHARELATEX_OAUTH_Apple_BUTTON_NAME
 ```
