@@ -1,13 +1,9 @@
 # Overleaf OAuth2 Tool
 
 Attention！Project Still In Beta！Don't use directly!
-
 This is a tool for Update your Overleaf to support Single Sign On(SSO)
-
 First of all, let's suppose you install Overleaf via [Overleaf Toolkit](https://github.com/overleaf/toolkit/). If you install Your Overleaf via other method, don't use this tool.
-
 Reminder: After Upgrade, all of your changes to Docker 'Sharelatex' will lose! Backup your Files Please!
-
 To get started, you need to reconfig your docker env variable.
 
 Here I give an example for github OAuth.
@@ -80,9 +76,6 @@ Finally, If you want to edit your SSO button name, please edit: [here](https://g
 ```bash
 # Common OAuth (Support Main OAuth like Github/Google and so on)
 # If you allow OAUTH : true | false
-
-
-
 SHARELATEX_OAUTH_ENABLED=
 
 # Auth Related
