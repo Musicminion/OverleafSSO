@@ -98,6 +98,9 @@ function initialize(webRouter, privateApiRouter, publicApiRouter) {
         CaptchaMiddleware.canSkipCaptcha
     )
 
+    // unmark below line(chose one) to make the login page to redirect the Oauth login Page
+    // webRouter.get('/login', UserPagesController.oauthCommonRedirect)
+    // webRouter.get('/login', UserPagesController.oauthAppleRedirect)
     webRouter.get('/login', UserPagesController.loginPage)
     AuthenticationController.addEndpointToLoginWhitelist('/login')
 
