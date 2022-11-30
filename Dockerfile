@@ -8,9 +8,7 @@ ARG SOURCE=./src/Oauth
 
 FROM $TEXLIVE_IMAGE as texlive
 
-
 FROM $BASE as app
-
 
 # set workdir (might solve issue #2 - see https://stackoverflow.com/questions/57534295/)
 WORKDIR /overleaf/services/web/
