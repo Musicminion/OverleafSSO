@@ -1,7 +1,6 @@
 version: '3'
 
 networks:
-
   mongo:
     name: mongo
     external: true
@@ -12,9 +11,6 @@ networks:
 
 services:
   sharelatex:
-    # Server Pro users:
-    # image: quay.io/sharelatex/sharelatex-pro
-    # image: sharelatex/sharelatex
     image: overleaf-oauth2:latest
     container_name: sharelatex
     hostname: sharelatex
@@ -38,7 +34,7 @@ services:
     environment:
 
       SHARELATEX_APP_NAME: Overleaf
-
+      
       # please modify Below 
       SHARELATEX_MONGO_URL: mongodb://username:PASSWORD@mongo:27017/?authSource=admin
       MONGO_CONNECTION_STRING: mmongodb://username:PASSWORD@mongo:27017/?authSource=admin
