@@ -1,0 +1,196 @@
+version: '3'
+
+networks:
+
+  mongo:
+    name: mongo
+    external: true
+
+  redis:
+    name: redis
+    external: true
+
+services:
+  sharelatex:
+    # Server Pro users:
+    # image: quay.io/sharelatex/sharelatex-pro
+    # image: sharelatex/sharelatex
+    image: overleaf-oauth2:latest
+    container_name: sharelatex
+    hostname: sharelatex
+    restart: always
+    networks:
+      - mongo
+      - redis
+    ports:
+      - 12010:80
+    volumes:
+      - ./main/data:/var/lib/sharelatex
+      - ./main/web:/overleaf/services/web
+      - ./main/logs:/var/log/sharelatex
+      - ./main/ex_data:/overleaf/data
+      # - ./textlive:/usr/local/texlive
+      ########################################################################
+      ####  Server Pro: Uncomment the following line to mount the docker  ####
+      ####             socket, required for Sibling Containers to work    ####
+      ########################################################################
+      # - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+
+      SHARELATEX_APP_NAME: Overleaf
+
+      # please modify Below 
+      SHARELATEX_MONGO_URL: mongodb://username:PASSWORD@mongo:27017/?authSource=admin
+      MONGO_CONNECTION_STRING: mmongodb://username:PASSWORD@mongo:27017/?authSource=admin
+
+      # Same property, unfortunately with different names in
+      # different locations
+      SHARELATEX_REDIS_HOST: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: XXXXX
+
+      ENABLED_LINKED_FILE_TYPES: 'url,project_file'
+
+      # Enables Thumbnail generation using ImageMagick
+      ENABLE_CONVERSIONS: 'true'
+
+      # Disables email confirmation requirement
+      EMAIL_CONFIRMATION_DISABLED: 'true'
+
+      # temporary fix for LuaLaTex compiles
+      # see https://github.com/overleaf/overleaf/issues/695
+      TEXMFVAR: /var/lib/sharelatex/tmp/texmf-var
+      ## Set for SSL via nginx-proxy
+      #VIRTUAL_HOST: 103.112.212.22
+
+      SHARELATEX_SITE_URL: https://XXXX
+      # SHARELATEX_NAV_TITLE: Our ShareLaTeX Instance
+      # SHARELATEX_HEADER_IMAGE_URL: http://somewhere.com/mylogo.png
+      SHARELATEX_ADMIN_EMAIL: XXXXX
+      # PW:0chen0TAO0@
+      # SHARELATEX_LEFT_FOOTER: '[{"text": "Powered by <a href=\"https://www.sharelatex.com\">ShareLaTeX</a> 2016"},{"text": "Another page I want to link to can be found <a href=\"here\">here</a>"} ]'
+      # SHARELATEX_RIGHT_FOOTER: '[{"text": "Hello I am on the Right"} ]'
+
+      # SHARELATEX_EMAIL_FROM_ADDRESS: "team@sharelatex.com"
+
+      # SHARELATEX_EMAIL_AWS_SES_ACCESS_KEY_ID:
+      # SHARELATEX_EMAIL_AWS_SES_SECRET_KEY:
+
+      # SHARELATEX_EMAIL_SMTP_HOST: smtp.mydomain.com
+      # SHARELATEX_EMAIL_SMTP_PORT: 587
+      # SHARELATEX_EMAIL_SMTP_SECURE: false
+      # SHARELATEX_EMAIL_SMTP_USER:
+      # SHARELATEX_EMAIL_SMTP_PASS:
+      # SHARELATEX_EMAIL_SMTP_TLS_REJECT_UNAUTH: true
+      # SHARELATEX_EMAIL_SMTP_IGNORE_TLS: false
+      # SHARELATEX_EMAIL_SMTP_NAME: '127.0.0.1'
+      # SHARELATEX_EMAIL_SMTP_LOGGER: true
+      # SHARELATEX_CUSTOM_EMAIL_FOOTER: "This system is run by department x"
+
+      ################
+      ## Server Pro ##
+      ################
+
+      # SANDBOXED_COMPILES: 'true'
+
+      # SANDBOXED_COMPILES_SIBLING_CONTAINERS: 'true'
+      # SANDBOXED_COMPILES_HOST_DIR: '/var/sharelatex_data/data/compiles'
+      # SYNCTEX_BIN_HOST_PATH: '/var/sharelatex_data/bin/synctex'
+
+      # DOCKER_RUNNER: 'false'
+
+      ## Works with test LDAP server shown at bottom of docker compose
+      # SHARELATEX_LDAP_URL: ldap://openldap:389
+      # SHARELATEX_LDAP_SEARCH_BASE: cn=admin,dc=lab,dc=com
+      # SHARELATEX_LDAP_SEARCH_FILTER: (&(objectClass=inetOrgPerson)(uid={user}))
+      # SHARELATEX_LDAP_BIND_DN: cn=admin,dc=lab,dc=com
+      # SHARELATEX_LDAP_BIND_CREDENTIALS: 0chen0TAO0
+      # SHARELATEX_LDAP_EMAIL_ATT: 'mail'
+      # SHARELATEX_LDAP_NAME_ATT: uid
+      # SHARELATEX_LDAP_LAST_NAME_ATT: 'sn'
+      # SHARELATEX_LDAP_UPDATE_USER_DETAILS_ON_LOGIN: 'true'
+      # SHARELATEX_TEMPLATES_USER_ID: "578773160210479700917ee5"
+      # SHARELATEX_NEW_PROJECT_TEMPLATE_LINKS: '[ {"name":"All Templates","url":"/templates/all"}]'
+
+      # SHARELATEX_TEMPLATES_USER_ID: 6383b5aaf4b4ac0093967d02
+      
+      ALLOW_EMAIL_LOGIN: 'false'
+
+
+
+      # OAUTH_CLIENT_ID: JSQMikYlKRDrhRSVhcaxeZer3AQiw9j0sp2g
+      # OAUTH_CLIENT_SECRET: RBj1jbuH9gIsd0BXfq99wgE9M4yaBxajBCxM
+      # OAUTH_AUTH_URL: https://oauth.iamchentao.com/cas/oauth2.0/authorize
+      # OAUTH_ACCESS_URL: https://oauth.iamchentao.com/cas/oauth2.0/accessToken
+      # OAUTH_USER_URL: https://oauth.iamchentao.com/cas/oauth2.0/profile
+
+      # SHARELATEX_OAUTH_AUTH_ENABLED: true
+
+
+
+
+
+      # SHARELATEX_PROXY_LEARN: "true"
+
+      # ldap:
+      #    restart: always
+      #    image: rroemhild/test-openldap
+      #    container_name: ldap
+      #    expose:
+      #        - 389
+
+      # See https://github.com/jwilder/nginx-proxy for documentation on how to configure the nginx-proxy container,
+      # and https://github.com/overleaf/overleaf/wiki/HTTPS-reverse-proxy-using-Nginx for an example of some recommended
+      # settings. We recommend using a properly managed nginx instance outside of the Overleaf Server Pro setup,
+      # but the example here can be used if you'd prefer to run everything with docker-compose
+
+      # nginx-proxy:
+      #     image: jwilder/nginx-proxy
+      #     container_name: nginx-proxy
+      #     ports:
+      #       #- "80:80"
+      #       - "443:443"
+      #     volumes:
+      #       - /var/run/docker.sock:/tmp/docker.sock:ro
+      #       - /home/sharelatex/tmp:/etc/nginx/certs
+
+
+      # I deploy the Redis and MongoDB, So you can set by yourself the copy the blow to end of offical docker-compose.yml
+      # OAuth相关的配置
+      # 是否允许全局的OAuth登录，值为`true`或者`false`,如果你需要使用单点登录，请把
+      SHARELATEX_OAUTH_ENABLED: true
+
+      # Auth Related
+      SHARELATEX_OAUTH_COMMON_ENABLED: true
+      SHARELATEX_OAUTH_COMMON_AUTH_URL:  XXXX
+      SHARELATEX_OAUTH_COMMON_CLIENT_ID: XXXX
+      SHARELATEX_OAUTH_COMMON_CLIENT_SECRET: XXXX
+      SHARELATEX_OAUTH_COMMON_REDIRECT_URL: XXXX
+      SHARELATEX_OAUTH_COMMON_ACCESS_TOKEN_URL: XXXX
+      SHARELATEX_OAUTH_COMMON_USER_PROFILE_URL: XXXX
+      SHARELATEX_OAUTH_COMMON_BUTTON_NAME: XXXX
+      # SHARELATEX_OAUTH_COMMON_SCOPE: user:email
+
+      # User Related
+      # 通过单点登录获取到的用户信息是否包含电子邮件字段
+      # 默认为否，那么在新用户通过单点登录的时候，就会创建
+      # 一个邮箱 [username]@[SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN]
+      # 其中username :  USER_JSON['SHARELATEX_OAUTH_COMMON_USER_EMAIL_NAME_IDENTIFIER']
+      SHARELATEX_OAUTH_COMMON_USER_PROFILE_CONTAIN_EMAIL: true
+
+      # 如果获取到的USER_JSON中，包括邮件地址，请把此项设置为邮件对应的字段，例如'mail'
+      # 如果获取到的USER_JSON中，不包括邮箱地址，请把此项设置为标识用户唯一性的字段,例如username
+      SHARELATEX_OAUTH_COMMON_USER_EMAIL_NAME_IDENTIFIER: email
+
+      # 当且仅当如果获取到的USER_JSON中，不包括邮件地址，此时如果新用户通过单点登录
+      # 这时候需要处理好注册的逻辑，此时注册的用户的邮箱的域名为：SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN
+      # 默认值是oauth2.localhost
+      SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN: oauth2.localhost
+
+      # 也就是说，如果获取到的USER_JSON中，不包括邮箱地址，当一个名叫Musicminion新用户登录进来的时候
+      # Overleaf会默认创建一个名叫 Musicminion@oauth2.localhost。密码会随机生成一个32位的无规律字符串
+      #（当然前提是你没有修改SHARELATEX_OAUTH_COMMON_USER_EMAIL_DOMAIN）
+
+      # Apple Related 
+      SHARELATEX_OAUTH_APPLE_ENABLED: false
