@@ -3,6 +3,8 @@ ARG TEXLIVE_IMAGE=registry.gitlab.com/islandoftex/images/texlive:latest
 
 ARG SOURCE=./src/Oauth
 # i set SOURCE because I put my source file at './src/' not like this './src/Oauth/'
+# i do not use Apple Oauth2, so I do not move Authkey.p8
+
 
 FROM $TEXLIVE_IMAGE as texlive
 
