@@ -31,19 +31,19 @@ RUN apt-get update && apt-get -y install \
 
 # COPY router
 RUN rm /overleaf/services/web/app/src/router.js
-COPY ./src/router.js /overleaf/services/web/app/src/
+COPY ./src/Oauth/router.js /overleaf/services/web/app/src/
 
 # COPY Auth Control
 RUN rm /overleaf/services/web/app/src/Features/Authentication/AuthenticationController.js
-COPY ./src/AuthenticationController.js /overleaf/services/web/app/src/Features/Authentication/
+COPY ./src/Oauth/AuthenticationController.js /overleaf/services/web/app/src/Features/Authentication/
 
 # COPY Auth Manager
 RUN rm /overleaf/services/web/app/src/Features/Authentication/AuthenticationManager.js
-COPY ./src/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
+COPY ./src/Oauth/AuthenticationManager.js /overleaf/services/web/app/src/Features/Authentication/
 
 # COPY login.pug
 RUN rm /overleaf/services/web/app/views/user/login.pug
-COPY ./src/login.pug /overleaf/services/web/app/views/user/
+COPY ./src/Oauth/login.pug /overleaf/services/web/app/views/user/
 
 
 # extend pdflatex with option shell-esacpe (fix for closed overleaf/overleaf/issues/217 and overleaf/docker-image/issues/45)
