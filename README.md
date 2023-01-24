@@ -1,3 +1,11 @@
+# Overleaf Plus
+
+- Overleaf Plus已经发布 https://github.com/Musicminion/overleaf 本仓库不在维护！
+- 你可以根据链接仓库的代码进行构建自己的镜像，并且使用。代码目前保持和官方一致。
+- 更多功能敬请期待。
+
+
+
 # Overleaf OAuth2 Tool
 
 Attention！Project Still In Beta！Don't use directly!
